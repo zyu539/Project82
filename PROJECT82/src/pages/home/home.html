@@ -11,4 +11,25 @@
 
 <ion-content>
   <div #map id="map"></div>
+  <ion-fab bottom right>
+    <button color="blue" ion-fab class="fab fab-md">
+      <ion-icon class="fab-close-icon icon icon-md ion-md-close">
+      </ion-icon>
+      <span class="add" role="img" class="icon icon-md ion-md-add" aria-label="add">
+      </span>
+      <div class="button-effect" style="transform: translate3d(-25px, -27px, 0px) scale(1); hright:96px; width:96px; opacity: 0; transition: transform 301ms, opacity 211ms 90ms;">
+      </div>
+    </button>
+    <ion-fab-list side="top" class>
+      <button ion-fab class="fab fab-md fab-in-list fab-md-in-list" (click)='toSearchPage()'>
+        <ion-icon class="fab-close-icon icon icon-md ion-md-close" name="close" role="img" aria-label="close">
+        </ion-icon>
+        <span class="button-inner">
+          <ion-icon class="icon icon-md ion-logo-facebook" name="logo-facebook" role="img" aria-label="logo facebook">
+          </ion-icon>
+        </span>
+        <div class="button-effect"></div>
+      </button>
+    </ion-fab-list>
+  </ion-fab>
 </ion-content>

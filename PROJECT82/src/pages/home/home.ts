@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
-
+import {ContactPage} from '../contact/contact';
 declare var google;
 
 @Component({
@@ -11,10 +11,14 @@ declare var google;
 export class HomePage {
 
   @ViewChild('map') mapElement: ElementRef;
-  map: any;
+  static map: any;
 
   constructor(public navCtrl: NavController, public geolocation: Geolocation) {
 
+  }
+
+  toSearchPage() {
+    this.navCtrl.push(ContactPage);
   }
 
   ionViewDidLoad(){
@@ -28,7 +32,7 @@ export class HomePage {
     });
 
     google.maps.event.addListener(marker, 'click', () => {
-      infoWindow.open(this.map, marker);
+      infoWindow.open(HomePage.map, marker);
     });
 
   }
@@ -45,10 +49,19 @@ export class HomePage {
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
 
-      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+      HomePage.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
 
     }, (err) => {
       console.log(err);
+      let latLng = new google.maps.LatLng(-33.8665433, 151.1956316);
+
+      let mapOptions = {
+        center: latLng,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      }
+
+      HomePage.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
     });
 
   }
@@ -56,9 +69,9 @@ export class HomePage {
   addMarker(){
 
     let marker = new google.maps.Marker({
-      map: this.map,
+      map: HomePage.map,
       animation: google.maps.Animation.DROP,
-      position: this.map.getCenter()
+      position: HomePage.map.getCenter()
     });
 
     let content = "<h4>Information!</h4>";
