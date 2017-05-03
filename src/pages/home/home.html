@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Map
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div #map id="map"></div>
+  <ion-fab right bottom>
+    <button ion-fab color="dark"><ion-icon name="arrow-dropup"></ion-icon></button>
+    <ion-fab-list side="top">
+      <button ion-fab><ion-icon name="logo-facebook" (click)='showModal()'></ion-icon></button>
+      <button ion-fab><ion-icon name="logo-twitter" (click)='stopRecord()'></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>
+
+      
+
