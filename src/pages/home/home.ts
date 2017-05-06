@@ -2,6 +2,8 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import { SearchPage } from '../search/search';
+import * as $ from 'jquery';
+import * as xml2js from 'xml2js';
 
 declare var google;
 
@@ -22,7 +24,7 @@ export class HomePage {
 
   interval: any;
   positions = [];
-  interval_time = 3000;
+  interval_time = 2000;
 
   constructor(public navCtrl: NavController, public geolocation: Geolocation, public modalCtrl: ModalController) {
 
@@ -39,19 +41,36 @@ export class HomePage {
       console.log('page > modal dismissed > data > ', data);
       if (data) {
         this.getPlaceDetail(data.place_id);
-        this.startRecord();
+        this.getInterval();
       }
     })
     modal.present();
   }
 
-  private startRecord() {
+  private getInterval() {
+    let self = this;
+    $.ajax({
+      url : "http://localhost:8080/server/route/period",
+      type: 'GET',
+      success: function(data) {
+        self.startRecord(data);
+      },
+
+      error: function() {
+        console.log('lolololol');
+      }
+    })
+  }
+
+  private startRecord(data) {
     var self = this;
+    self.interval_time = data;
     this.interval = setInterval(function () {
       self.geolocation.getCurrentPosition().then((position) => {
         let pos = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          time: Date.now()
         }
         self.positions.push(pos);
       });
@@ -66,6 +85,31 @@ export class HomePage {
 
   stopRecord() {
     clearInterval(this.interval);
+    let position = JSON.parse(JSON.stringify(this.positions));
+    let routeData = {
+      positions: {position: position},
+      period: this.interval_time
+    };
+
+    let builder = new xml2js.Builder();
+    let xml = builder.buildObject(routeData);
+    xml = xml.replace("root", "route");
+    xml = xml.replace("root", "route");
+    console.log(xml);
+
+    $.ajax({
+      url : "http://localhost:8080/server/route/data",
+      type: 'POST',
+      contentType: "application/xml",
+      data: xml,
+      success: function() {
+        console.log('lalalalal');
+      },
+
+      error: function() {
+        console.log('lolololol');
+      }
+    })
   }
 
   loadMap() {

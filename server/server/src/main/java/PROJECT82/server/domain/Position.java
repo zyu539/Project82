@@ -11,11 +11,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Embeddable
 public class Position {
 	
-	public Position(double latitude, double longtitude, double speed) {
+	public Position(double latitude, double longitude, double speed, String time) {
 		super();
 		this.latitude = latitude;
-		this.longtitude = longtitude;
+		this.longitude = longitude;
 		this.speed = speed;
+		this.time = time;
 	}
 	
 	protected Position() {}
@@ -24,10 +25,13 @@ public class Position {
 	private double latitude;
 	
 	@XmlElement
-	private double longtitude;
+	private double longitude;
 	
 	@XmlElement
 	private double speed;
+	
+	@XmlElement
+	private String time;
 
 	public double getLatitude() {
 		return latitude;
@@ -37,12 +41,12 @@ public class Position {
 		this.latitude = latitude;
 	}
 
-	public double getLongtitude() {
-		return longtitude;
+	public double getLongitude() {
+		return longitude;
 	}
 
-	public void setLongtitude(double longtitude) {
-		this.longtitude = longtitude;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
 	public double getSpeed() {
@@ -51,5 +55,13 @@ public class Position {
 
 	public void setSpeed(double speed) {
 		this.speed = speed;
+	}
+	
+	public String getTime() {
+		return time;
+	}
+	
+	public void setTime(String time) {
+		this.time = time;
 	}
 }

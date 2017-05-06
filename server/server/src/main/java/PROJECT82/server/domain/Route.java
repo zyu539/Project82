@@ -14,17 +14,19 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
+@XmlRootElement(name="route")
 @Entity
 public class Route {
 	
-	public Route (Set<Position> route) {
+	public Route (Set<Position> positions, int period) {
 		super();
-		this.route = route;
+		this.positions = positions;
+		this.period = period;
 	}
 	
 	protected Route() {}
@@ -36,11 +38,11 @@ public class Route {
 	
 	@ElementCollection(fetch = FetchType.LAZY, targetClass = Position.class)
 	@CollectionTable(name = "Position")
-	@XmlElementWrapper(name="route")
+	@XmlElementWrapper(name="positions")
 	@XmlElement(name="position")
-	protected Set<Position> route = new HashSet<Position>();
+	protected Set<Position> positions = new HashSet<Position>();
 	
-	@XmlAttribute
+	@XmlAttribute(name="period")
 	private int period;
 
 	public Long getId() {
@@ -51,12 +53,12 @@ public class Route {
 		this.id = id;
 	}
 
-	public Set<Position> getRoute() {
-		return route;
+	public Set<Position> getPositions() {
+		return positions;
 	}
 
-	public void setRoute(Set<Position> route) {
-		this.route = route;
+	public void setPositions(Set<Position> positions) {
+		this.positions = positions;
 	}
 
 	public int getPeriod() {

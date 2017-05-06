@@ -13,5 +13,9 @@ public class RouteUtil {
 	    double dist = earthRadius * c;
 
 	    return dist;
-	 }
+	}
+	
+	public static double calSpeed(double lat1, double lng1, double lat2, double lng2, double timeInSec) {
+		return distFrom(lat1, lng1, lat2, lng2) / timeInSec;
+	}
 }
