@@ -110,12 +110,54 @@ export class HomePage {
       error: function() {
         console.log('lolololol');
       }
-    })
+    });
   }
 
   loadMap() {
 
     console.log(moment().format());
+    this.positions.push({
+      latitude: 23.4534,
+      longitude: 42.45743,
+      time: 1
+    });
+
+    this.positions.push({
+      latitude: 23.4534,
+      longitude: 42.45743,
+      time: 2
+    });
+
+    this.positions.push({
+      latitude: 23.4534,
+      longitude: 42.45743,
+      time: 3
+    });
+    let position = JSON.parse(JSON.stringify(this.positions));
+    let routeData = {
+      positions: {position: position},
+      period: 3000
+    };
+
+    let builder = new xml2js.Builder();
+    let xml = builder.buildObject(routeData);
+    xml = xml.replace("root", "route");
+    xml = xml.replace("root", "route");
+    console.log(xml);
+
+    $.ajax({
+      url : "http://localhost:8080/server/route/data",
+      type: 'POST',
+      contentType: "application/xml",
+      data: xml,
+      success: function() {
+        console.log('lalalalal');
+      },
+
+      error: function() {
+        console.log('lolololol');
+      }
+    })
     this.geolocation.getCurrentPosition().then((position) => {
 
       let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
