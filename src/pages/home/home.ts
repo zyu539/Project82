@@ -4,6 +4,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { SearchPage } from '../search/search';
 import * as $ from 'jquery';
 import * as xml2js from 'xml2js';
+import * as moment from 'moment';
 
 declare var google;
 
@@ -70,7 +71,7 @@ export class HomePage {
         let pos = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          time: Date.now()
+          time: moment().format()
         }
         self.positions.push(pos);
       });
@@ -114,6 +115,7 @@ export class HomePage {
 
   loadMap() {
 
+    console.log(moment().format());
     this.geolocation.getCurrentPosition().then((position) => {
 
       let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
