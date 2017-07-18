@@ -40,23 +40,31 @@ public class MapGriding {
 	}
 	
 	public static List<Route> makeRoutes(List<RawPosition> positions) {
+		System.out.println("lol:Syndra");
 		List<Route> list = new ArrayList<Route>();
 		int prev = 0;
 		Route r = null;
+		findRange(positions);
+		long prevT = 0;
 		for (RawPosition rp : positions) {
-			findRange(positions);
+			long time = RouteUtil.StringToSec(rp.getDate());
 			if (rp.getOnService() == 1 && prev == 0) {
 				r = new Route();
-			} else if (rp.getOnService() == 1) {
+				prevT = time;
+			} else if (rp.getOnService() == 1 && (time-prevT) > 16000) {
 				List<RawPosition> tmp = r.getPositions();
 				tmp.add(rp);
 				r.setPositions(tmp);
+				prevT = time;
 			} else if (rp.getOnService() == 0 && prev == 1) {
 				list.add(r);
+				prevT = time;
 			}
 			prev = rp.getOnService();
 		}
+		System.out.println("lol:Akali");
 		makeGrids(list, 1000, 1000);
+		System.out.println("lol:Soraka");
 		return list;
 	}
 

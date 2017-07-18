@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
+import PROJECT82.dataProvision.domain.Forest;
 import PROJECT82.dataProvision.domain.GridPosition;
 import PROJECT82.dataProvision.domain.PersistenceManager;
 import PROJECT82.dataProvision.domain.Route;
@@ -36,5 +37,14 @@ public class RouteDao {
 		tx.commit();
 		em.close();
 		return results;
+	}
+	
+	public void persistForest(Forest f) {
+		EntityManager em = PersistenceManager.instance().createEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+		em.persist(f);
+		tx.commit();
+		em.close();
 	}
 }

@@ -16,23 +16,17 @@ public class SampleReader {
 		String line = "";
 		String cvsSplitBy = ",";
 		List<RawPosition> list = new ArrayList<RawPosition>();
+		int count = 0;
 		try {
 			br = new BufferedReader(new FileReader(textFile));
 			while ((line = br.readLine()) != null) {
 				// use comma as separator
 				String[] point = line.split(cvsSplitBy);
 				RawPosition rp = new RawPosition(Integer.parseInt(point[0]), Double.parseDouble(point[2]), Double.parseDouble(point[1]), Integer.parseInt(point[3]), point[4]);
-//				if ("1".equals(point[3]) && "0".equals(previous)) {
-//					r = new Route(60);
-//				} else if ("1".equals(point[3])) {
-//					List<Position> tmp = r.getPositions();
-//					tmp.add(new Position(Double.parseDouble(point[2]), Double.parseDouble(point[1]), point[4]));
-//					r.setPositions(tmp);
-//				} else if ("0".equals(point[3]) && "1".equals(previous)) {
-//					list.add(r);
-//				}
-//				previous = point[3];
 				list.add(rp);
+				if (count++ >= 666666) {
+					break;
+				}
 			}
 
 		} catch (FileNotFoundException e) {

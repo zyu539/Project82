@@ -16,11 +16,13 @@ public class SampleDao {
 		EntityManager em = PersistenceManager.instance()
 				.createEntityManager();
 		EntityTransaction tx = em.getTransaction();
+		System.out.println("??????");
 		tx.begin();
 		for (RawPosition p : plist) {
 		    em.persist(p);
 		}
 		tx.commit();
+		System.out.println("lol-ashe");
 		em.close();
 	}
 	
@@ -35,6 +37,7 @@ public class SampleDao {
 		@SuppressWarnings("unchecked")
 		List<RawPosition> results = query.getResultList();
 		tx.commit();
+		System.out.println("lol-ahri");
 		em.close();
 		return results;
 	}
@@ -48,6 +51,7 @@ public class SampleDao {
 		    em.persist(r);
 		}
 		tx.commit();
+		System.out.println("lol-catlyn");
 		em.close();
 	}
 }

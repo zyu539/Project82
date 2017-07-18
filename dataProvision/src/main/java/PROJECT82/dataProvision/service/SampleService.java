@@ -13,7 +13,7 @@ public class SampleService {
 	SampleDao sd = new SampleDao();
 	
 	public void persistRawData() {
-		List<RawPosition> plist = SampleReader.readRoute("sample.txt");
+		List<RawPosition> plist = SampleReader.readRoute("/Users/lhy/Downloads/交通赛数据_上/20140803_train.txt");
 		System.out.println("lalalala");
 		sd.persistData(plist);
 	}
@@ -25,6 +25,7 @@ public class SampleService {
 	
 	public void persistRawData(List<RawPosition> list) {
 		List<Route> plist = MapGriding.makeRoutes(list);
+		System.out.println("lol-jinx");
 		sd.persistRoute(plist);
 	}
 }

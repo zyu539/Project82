@@ -29,7 +29,7 @@ public class RawPosition {
 	protected RawPosition() {}
 	
 	@Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private int taxiId;
@@ -42,14 +42,6 @@ public class RawPosition {
 	
 	@Column(nullable = false)
 	private String date;
-	
-	public Long getId() {
-		return id;
-	}
-	
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public int getTaxiId() {
 		return taxiId;
