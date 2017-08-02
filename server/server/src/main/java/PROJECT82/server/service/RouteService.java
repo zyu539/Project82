@@ -1,7 +1,7 @@
 package PROJECT82.server.service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -13,9 +13,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import PROJECT82.server.dao.RouteDao;
-import PROJECT82.server.domain.Position;
+import PROJECT82.server.domain.GridPosition;
 import PROJECT82.server.domain.Route;
-import PROJECT82.server.util.RouteUtil;
+import PROJECT82.server.util.Algorithms;
+import PROJECT82.server.util.MapGriding;
 
 @Path("/route")
 public class RouteService {
@@ -23,32 +24,28 @@ public class RouteService {
 	@Inject
 	private RouteDao routeDao;
 	private final int period = 3000;
+	private final double gridSizeX = 0;
+	private final double gridSizeY = 0;
+	private final double left = 0;
+	private final double bottom = 0;
 
 	@POST
 	@Path("/data")
 	@Consumes({ MediaType.APPLICATION_XML })
-	public Response postRouteData(Route route) {
-		route.setPeriod(period);
+	public double postRouteData(Route route) {
 		System.out.println("receive!!!!");
 		System.out.println("id: " + route.getId());
-		Set<Position> tmp = new HashSet<Position>();
-		Set<Position> positions = route.getPositions();
-		Position prev = null;
-		for (Position p : positions) {
-			if (prev == null) {
-				p.setSpeed(0);
-				tmp.add(p);
-			} else {
-				p.setSpeed(RouteUtil.calSpeed(prev.getLatitude(), prev.getLongitude(), p.getLatitude(),
-						p.getLongitude(), ((double)period)/1000));
-				tmp.add(p);
-			}
-			prev = p;
-			System.out.println(p.getSpeed());
-		}
-		route.setPositions(tmp);
-
-		return routeDao.postRouteData(route);
+		List<GridPosition> lg = new ArrayList<GridPosition>();
+		List<Integer[]>list = MapGriding.makeGrids(route, gridSizeX, gridSizeY, left, bottom);
+		Integer[] start = list.get(0);
+		Integer[] end = list.get(list.size() - 1);
+		List<Route> routes = routeDao.retrieveOrderedData(start, end);
+		for (Integer[] p : list) {
+			lg.add(routeDao.retrieveGrids(p[0], p[1]));
+		}		
+		route.setGrids(lg);
+		Algorithms alg = new Algorithms(1, 1);		
+		return alg.IBatAlg(routes, route);
 	}
 
 	@GET

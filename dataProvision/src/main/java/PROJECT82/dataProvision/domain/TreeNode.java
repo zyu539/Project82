@@ -1,8 +1,5 @@
 package PROJECT82.dataProvision.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,7 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class TreeNode {
@@ -21,14 +18,19 @@ public class TreeNode {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@OneToOne
+    @JoinColumn(name="LEFT_ID")
 	private TreeNode left;
 	
+	@OneToOne
+    @JoinColumn(name="RIGHT_ID")
 	private TreeNode right;
 	
 	private int depth;
 	
-	@OneToMany(mappedBy="node")
-	private List<Route> routes = new ArrayList<Route>();
+	@OneToOne
+    @JoinColumn(name="NODE_ID")
+	private GridPosition gp = new GridPosition();
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="root_ID")
@@ -66,12 +68,12 @@ public class TreeNode {
 		this.depth = depth;
 	}
 
-	public List<Route> getRoutes() {
-		return routes;
+	public GridPosition getGp() {
+		return gp;
 	}
 
-	public void setRoutes(List<Route> routes) {
-		this.routes = routes;
+	public void setGp(GridPosition gp) {
+		this.gp = gp;
 	}
 
 }

@@ -16,13 +16,13 @@ public class SampleDao {
 		EntityManager em = PersistenceManager.instance()
 				.createEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		System.out.println("??????");
+		System.out.println("start persisting");
 		tx.begin();
 		for (RawPosition p : plist) {
 		    em.persist(p);
 		}
 		tx.commit();
-		System.out.println("lol-ashe");
+		System.out.println("finsh persisting...");
 		em.close();
 	}
 	
@@ -37,7 +37,7 @@ public class SampleDao {
 		@SuppressWarnings("unchecked")
 		List<RawPosition> results = query.getResultList();
 		tx.commit();
-		System.out.println("lol-ahri");
+		System.out.println("got ordered data...");
 		em.close();
 		return results;
 	}
@@ -45,13 +45,18 @@ public class SampleDao {
 	public void persistRoute(List<Route> routes) {
 		EntityManager em = PersistenceManager.instance()
 				.createEntityManager();
+		int count = routes.size();
 		EntityTransaction tx = em.getTransaction();
+		System.out.println("persist routes...");
 		tx.begin();
-		for (Route r : routes) {
-		    em.persist(r);
+		for (int i = 0; i < count; i++) {
+		    em.persist(routes.get(i));
+		    if (i % 100 == 0) {
+		        System.out.println("persisted " + i);
+		    }
 		}
 		tx.commit();
-		System.out.println("lol-catlyn");
+		System.out.println("persist finish");
 		em.close();
 	}
 }

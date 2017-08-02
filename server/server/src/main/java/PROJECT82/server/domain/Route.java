@@ -1,8 +1,9 @@
 package PROJECT82.server.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -10,40 +11,30 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="route")
 @Entity
 public class Route {
-	
-	public Route (Set<Position> positions, int period) {
-		super();
-		this.positions = positions;
-		this.period = period;
+
+	public Route() {
 	}
-	
-	protected Route() {}
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@XmlAttribute
 	private Long id;
-	
+
 	@ElementCollection(fetch = FetchType.LAZY, targetClass = Position.class)
-	@CollectionTable(name = "Position")
-	@XmlElementWrapper(name="positions")
-	@XmlElement(name="position")
-	protected Set<Position> positions = new HashSet<Position>();
-	
-	@XmlAttribute(name="period")
-	private int period;
+	@CollectionTable(name = "Positions")
+	protected List<Position> positions = new ArrayList<Position>();
+
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@JoinTable(name = "route_grid", joinColumns = {
+			@JoinColumn(name = "route_ID", referencedColumnName = "id") }, inverseJoinColumns = {
+					@JoinColumn(name = "grid_ID", referencedColumnName = "id") })
+	protected List<GridPosition> grids = new ArrayList<GridPosition>();
 
 	public Long getId() {
 		return id;
@@ -53,19 +44,19 @@ public class Route {
 		this.id = id;
 	}
 
-	public Set<Position> getPositions() {
+	public List<GridPosition> getGrids() {
+		return grids;
+	}
+
+	public void setGrids(List<GridPosition> grids) {
+		this.grids = grids;
+	}
+
+	public List<Position> getPositions() {
 		return positions;
 	}
 
-	public void setPositions(Set<Position> positions) {
+	public void setPositions(List<Position> positions) {
 		this.positions = positions;
-	}
-
-	public int getPeriod() {
-		return period;
-	}
-
-	public void setPeriod(int period) {
-		this.period = period;
 	}
 }

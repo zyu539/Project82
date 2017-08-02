@@ -15,9 +15,9 @@ public class Main {
 		
 		RouteService rs = new RouteService();
 		ss.persistRawData();
-		List<RawPosition> plist = ss.retrieveOrderedData();
-		ss.persistRawData(plist);
-		System.out.println("lalalala");
+//		List<RawPosition> plist = ss.retrieveOrderedData();
+//		ss.persistRawData(plist);
+		System.out.println("finish persisting");
 		List<Route> tmp = rs.retrieveRoute(new int[]{801, 493}, new int[]{801, 494});
 		tmp.stream().map(e -> e.getId() + " ").forEach(System.out::print);
 		Algorithms alg = new Algorithms(3, 2);

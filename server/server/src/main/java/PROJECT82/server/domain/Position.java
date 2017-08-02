@@ -1,5 +1,6 @@
 package PROJECT82.server.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -11,11 +12,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Embeddable
 public class Position {
 
-	public Position(double latitude, double longitude, double speed, String time) {
+	public Position(double latitude, double longitude, String time) {
 		super();
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.speed = speed;
 		this.time = time;
 	}
 

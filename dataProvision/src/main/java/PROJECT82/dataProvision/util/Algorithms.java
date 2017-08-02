@@ -65,18 +65,38 @@ public class Algorithms {
 		return f;
 	}
 	
+	public double testIForest(Route r, Forest f) {
+		double eN = 0;
+		final double cN = 2 * harmonic(sampleSize - 1) - 2 * (sampleSize - 1) / sampleSize;
+		List<GridPosition> list = r.getGrids();
+		for (TreeNode root : f.getRoots()) {
+			eN += getDepth(list, root) / numOfTrials;
+		}
+		return Math.pow(2, -eN / cN);
+	}
+	
 	private double harmonic(int n) {
 		return Math.log(n) + 0.57721566;
 	}
 	
+	private int getDepth(List<GridPosition> list, TreeNode root) {
+		if (root.getGp() == null) {
+			return 0;
+		} else if (list.contains(root)){
+			return 1 + getDepth(list, root.getLeft());
+		} else {
+			return 1 + getDepth(list, root.getRight());
+		}
+	}
+	
 	private TreeNode divideToTree(List<Route> list, List<GridPosition> grids, Random rand, int depth) {
 		TreeNode t = new TreeNode();
-		t.setRoutes(list);
 		if (list.size() < 2) {
 			t.setDepth(depth);
 			return t;
 		}
 		GridPosition g = grids.get(rand.nextInt(grids.size()));
+		t.setGp(g);
 		List<Route> left = new ArrayList<Route>();
 		List<Route> right = new ArrayList<Route>();
 		for (Route r : list) {

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import PROJECT82.dataProvision.domain.RawPosition;
 import PROJECT82.dataProvision.domain.Route;
 
 public class RouteUtil {
@@ -45,5 +46,16 @@ public class RouteUtil {
 			e.printStackTrace();
 		}
 		return sec;
+	}
+	
+	public static List<RawPosition> orderPosition(List<RawPosition> ps) {
+		Collections.sort(ps, (RawPosition p1, RawPosition p2) ->{
+			if(p1.getTaxiId() - p2.getTaxiId() == 0) {
+				return p1.getDate().compareTo(p2.getDate());
+			} else {
+				return p1.getTaxiId() - p2.getTaxiId();
+			}
+		});
+		return ps;
 	}
 }

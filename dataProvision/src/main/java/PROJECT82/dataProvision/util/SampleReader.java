@@ -24,7 +24,7 @@ public class SampleReader {
 				String[] point = line.split(cvsSplitBy);
 				RawPosition rp = new RawPosition(Integer.parseInt(point[0]), Double.parseDouble(point[2]), Double.parseDouble(point[1]), Integer.parseInt(point[3]), point[4]);
 				list.add(rp);
-				if (count++ >= 666666) {
+				if (count++ >= 666665) {
 					break;
 				}
 			}

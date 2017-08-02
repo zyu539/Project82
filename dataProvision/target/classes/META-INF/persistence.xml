@@ -17,6 +17,8 @@
 		<class>PROJECT82.dataProvision.domain.RawPosition</class>
 		<class>PROJECT82.dataProvision.domain.Route</class>
 		<class>PROJECT82.dataProvision.domain.GridPosition</class>
+		<class>PROJECT82.dataProvision.domain.TreeNode</class>
+		<class>PROJECT82.dataProvision.domain.Forest</class>
 		<!-- Classes which are to be mapped and therefore persistent. -->
 		<properties>
 			<!-- Configure the data source. In this case the embedded H2 database 
