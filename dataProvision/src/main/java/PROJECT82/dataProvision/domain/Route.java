@@ -28,7 +28,7 @@ public class Route {
 //	@JoinColumn(name= "route_id")
 	protected transient List<RawPosition> positions = new ArrayList<RawPosition>();
 
-	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JoinTable(name = "route_grid", joinColumns = {
 			@JoinColumn(name = "route_ID", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "grid_ID", referencedColumnName = "id") })

@@ -14,6 +14,10 @@ public class RouteService {
 		return rd.retrieveOrderedData(start, end);
 	}
 	
+	public List<Route> retrieveRoute() {
+		return rd.retrieveRoutes();
+	}
+	
 	public void persistForest(Forest f) {
 		rd.persistForest(f);
 	}

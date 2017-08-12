@@ -3,6 +3,7 @@ package PROJECT82.dataProvision.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +19,7 @@ public class Forest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@OneToMany(mappedBy="forest")
+	@OneToMany(mappedBy="forest", cascade = CascadeType.MERGE)
 	private List<TreeNode> roots = new ArrayList<TreeNode>();
 
 	public Long getId() {

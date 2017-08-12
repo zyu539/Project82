@@ -26,9 +26,13 @@ public class Algorithms {
 	public double IBatAlg(List<Route> list, Route test) {
 		int[] n = new int[numOfTrials];
 		Random rand = new Random();
-		List<GridPosition> t = test.getGrids();
 		final double cN = 2 * harmonic(sampleSize - 1) - 2 * (sampleSize - 1) / sampleSize;
+		for (GridPosition gp : test.getGrids()) {
+			System.out.print(gp.getId() + ", ");
+		}
+		System.out.println();
 		for (int i = 0; i < numOfTrials; i++) {
+			List<GridPosition> t = new ArrayList<GridPosition>(test.getGrids());
 			List<Route> sample = RouteUtil.pickNRandom(list, sampleSize);
 			while (!sample.isEmpty() && !t.isEmpty()) {
 				n[i]++;
@@ -39,13 +43,21 @@ public class Algorithms {
 					List<GridPosition> gp = r.getGrids();
 					if (!gp.contains(p)) {
 						tmp.add(r);
+						gp.remove(p);
 					}
 				}
+//				System.out.println(p.getId() + ": " + tmp.size());
 				sample.removeAll(tmp);
 			}
+//			System.out.println(" -------------");
 		}
-		
-		return Math.pow(2, -(IntStream.of(n).sum() / (numOfTrials * cN)));
+		double eN = 0;
+		for (int i = 0; i < numOfTrials; i++) {
+			eN += n[i];
+		}
+		eN /= numOfTrials;
+		//System.out.println("E(N) = " + eN);
+		return Math.pow(2, -(eN / cN));
 	}
 	
 	public Forest trainIForest(List<Route> list) {
@@ -62,6 +74,7 @@ public class Algorithms {
 			tn.add(divideToTree(list, list1, rand, 1));
 		}
 		f.setRoots(tn);
+		System.out.println("finish!!");
 		return f;
 	}
 	

@@ -39,6 +39,19 @@ public class RouteDao {
 		return results;
 	}
 	
+	public List<Route> retrieveRoutes() {
+		EntityManager em = PersistenceManager.instance().createEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		String sql1 = "select * from Route";
+		tx.begin();
+		Query query = em.createNativeQuery(sql1, Route.class);
+		@SuppressWarnings("unchecked")
+		List<Route> routes = query.getResultList();
+		tx.commit();
+		em.close();
+		return routes;
+	}
+	
 	public void persistForest(Forest f) {
 		EntityManager em = PersistenceManager.instance().createEntityManager();
 		EntityTransaction tx = em.getTransaction();

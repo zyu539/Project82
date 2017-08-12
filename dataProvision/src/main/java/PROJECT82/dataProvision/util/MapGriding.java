@@ -1,11 +1,14 @@
 package PROJECT82.dataProvision.util;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import PROJECT82.dataProvision.domain.GridPosition;
 import PROJECT82.dataProvision.domain.RawPosition;
@@ -62,7 +65,7 @@ public class MapGriding {
 				tmp.add(rp);
 				r.setPositions(tmp);
 				prevT = time;
-			} else if (rp.getOnService() == 1 && (time - prevT) > 16000) {
+			} else if (rp.getOnService() == 1 && (time - prevT) > 24000) {
 				List<RawPosition> tmp = r.getPositions();
 				tmp.add(rp);
 				r.setPositions(tmp);
@@ -78,9 +81,9 @@ public class MapGriding {
 			}
 			prev = rp.getOnService();
 		}
-		write0a(list);
+		distFilter(list);
 		System.out.println("making grids....");
-		makeGrids(list, 500, 500);
+		makeGrids(list, 75, 75);
 		System.out.println("finish griding...");
 		return list;
 	}
@@ -122,7 +125,7 @@ public class MapGriding {
 				prev = tmp;
 			}
 		}
-
+		write0b(routes, gridNumberX, gridNumberY);
 		return routes;
 	}
 
@@ -143,27 +146,143 @@ public class MapGriding {
 
 		return r;
 	}
-
-	private static void write0a(List<Route> list) {
-		try{
+	
+	public static void write0b(List<Route> list, int gridNumberX, int gridNumberY) {
+		try {
 			StringBuilder sb = new StringBuilder();
+			System.out.println("Start Writing...");
+			double gridSizeX = (right - left) / gridNumberX;
+			double gridSizeY = (top - bottom) / gridNumberY;
 			for (Route r : list) {
-				List<RawPosition> gps = r.getPositions();
-				for(RawPosition rp : gps) {
-					sb.append(rp.getLatitude() + " " + rp.getLongtitude() + "\n");
+				List<GridPosition> gps = r.getGrids();
+				for(GridPosition rp : gps) {
+					double lat = left + gridSizeX * (rp.getIndexX() + 0.5); 
+					double lon = bottom + gridSizeY * (rp.getIndexY() + 0.5);
+					sb.append(lat + " " + lon + "\n");
 				}
 				sb.append("\n");
 			}
-		    PrintWriter writer = new PrintWriter("route.txt", "UTF-8");
-		    writer.println(sb);
+			PrintWriter writer;
+			writer = new PrintWriter("route.txt", "UTF-8");
+			writer.println(sb);
 		    writer.close();
-		} catch (IOException e) {
-		   // do something
-			System.out.println(e.getMessage() + "!!!!!!");
+		    System.out.println("Finish Writing.");
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+	}
+
+	private static List<Route> distFilter(List<Route> list) {
+		List<Double> disList = new ArrayList<Double>();
+		List<Route> remove = new ArrayList<Route>();
+		for (Route r : list) {
+			RawPosition prev = null;
+			double dist = 0;
+			List<RawPosition> gps = r.getPositions();
+			for(RawPosition rp : gps) {
+				if (prev != null) {
+					dist += RouteUtil.distFrom(prev.getLatitude(), prev.getLongtitude(), rp.getLatitude(), rp.getLongtitude());
+				}
+				prev = rp;
+			}
+			disList.add(dist);
+			if (dist > 16000) {
+				remove.add(r);
+			}
+		}
+		list.removeAll(remove);
+		Collections.sort(disList);
+//		double min = disList.get(0);
+//		double max = disList.get(disList.size() - 1);
+//		double interval = (max - min) / 100;
+//		int[] counts = new int[100];
+//		for (Double d : disList) {
+//			for (int i = 0; i < 100; i++) {
+//				if (d <= min + (i+1) * interval) {
+//					counts[i] += 1;
+//					break;
+//				}
+//			}
+//		}
+//		for (int i = 0; i < 100; i++) {
+//			System.out.println((min + i * interval) + " - " + (min + (i+1) * interval)); 
+//		}
+//		
+//		for (int i = 0; i < 100; i++) {
+//			System.out.println(counts[i]); 
+//		}
+		
+		return list;
 	}
 	
 	private static boolean isOut(double lat, double lon) {
 		return lat < left || lat > right || lon < bottom || lon > top;
+	}
+	
+	public static void mostVisit(List<Route> list) {
+		Map<GridPosition, Integer> map = new HashMap<GridPosition, Integer>();
+		int max = 0;
+		GridPosition index = null;
+		for (Route r : list) {
+			for (GridPosition p : r.getGrids()) {
+				if (map.containsKey(p)) {
+					map.replace(p, map.get(p) + 1);
+				} else {
+					map.put(p,  1);
+				}
+				if (map.get(p) > max) {
+					max = map.get(p);
+					index = p;
+				}
+			}
+		}
+		System.out.println(index.getId() + "   " + max);
+		
+		Long id = index.getId();
+		max = 0;
+		Map<GridPosition, Integer> map2 = new HashMap<GridPosition, Integer>();
+		List<Route> routes = index.getRoutes();
+		for (Route r : routes) {
+			for (GridPosition p : r.getGrids()) {
+				if (map2.containsKey(p)) {
+					map2.replace(p, map2.get(p) + 1);
+				} else {
+					map2.put(p,  1);
+				}
+			}
+		}
+		
+		for (GridPosition gp : map2.keySet()) {
+			if (map2.get(gp) > 100 && map2.get(gp) < 300) {
+				System.out.println(gp.getIndexX() + " & " + gp.getIndexY() + ": " + map2.get(gp));
+			}
+		}
+	}
+	
+	public static List<Route> subtract(List<Route> list, int[] start, int[] end) {
+		for (Route r : list) {
+			List<GridPosition> tmp = r.getGrids();
+			List<GridPosition> tmp1 = new ArrayList<GridPosition>();
+			boolean flag = false;
+			for (GridPosition gp : tmp) {	
+				if (gp.getIndexX() == start[0] && gp.getIndexY() == start[1]) {
+					flag = true;
+				}
+				
+				if (flag) {
+					tmp1.add(gp);
+				}
+				
+				if (gp.getIndexX() == end[0] && gp.getIndexY() == end[1]) {
+					tmp1.add(gp);
+					break;
+				}
+				
+			}
+			r.setGrids(tmp1);
+		}
+		
+		return list;
 	}
 }
